@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Language Camera Mode</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; background: #f0f4f8; }
+  video, canvas { border: 2px solid #333; border-radius: 10px; margin-top: 20px; }
+  #detectedSign { font-size: 24px; font-weight: bold; margin-top: 15px; }
+  #funFact { margin-top: 10px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<h2>🤚 Sign Language Recognition</h2>
+<video id="webcam" width="400" height="300" autoplay muted></video>
+<canvas id="canvas" width="400" height="300"></canvas>
+<p id="detectedSign">Detected Sign: -</p>
+<p id="funFact"></p>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.12.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose@0.0.7/dist/handpose.js"></script>
+
+<script>
+const video = document.getElementById("webcam");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const detectedSignEl = document.getElementById("detectedSign");
+const funFactEl = document.getElementById("funFact");
+
+// Example fun facts
+const facts = {
+  "A":"A is the first letter in the alphabet!",
+  "B":"B comes after A.",
+  "C":"C is for cat 🐱.",
+  // Add all other letters/numbers
+};
+
+// Predefined gestures mapping
+// Here we assume you have a function `predictGesture` to classify the handpose landmarks to a sign
+async function main() {
+  const model = await handpose.load();
+  await setupCamera();
+  video.play();
+
+  async function detect() {
+    const predictions = await model.estimateHands(video);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+    if(predictions.length > 0) {
+      // Draw keypoints
+      predictions[0].landmarks.forEach(([x,y])=>{
+        ctx.beginPath();
+        ctx.arc(x*(canvas.width/video.width), y*(canvas.height/video.height),5,0,2*Math.PI);
+        ctx.fillStyle = "red";
+        ctx.fill();
+      });
+
+      const sign = predictGesture(predictions[0].landmarks);
+      detectedSignEl.innerText = "Detected Sign: " + sign;
+      funFactEl.innerText = facts[sign] || "";
+    } else {
+      detectedSignEl.innerText = "Detected Sign: -";
+      funFactEl.innerText = "";
+    }
+
+    requestAnimationFrame(detect);
+  }
+
+  detect();
+}
+
+// Simple placeholder function: map hand landmarks to a sign
+function predictGesture(landmarks) {
+  // You should replace this with your trained model or rules
+  // For demo, we'll randomly return A–C
+  const signs = ["A","B","C"];
+  return signs[Math.floor(Math.random()*signs.length)];
+}
+
+// Setup webcam
+async function setupCamera() {
+  const stream = await navigator.mediaDevices.getUserMedia({video:true});
+  video.srcObject = stream;
+  return new Promise(resolve=>{
+    video.onloadedmetadata = ()=>resolve(video);
+  });
+}
+
+main();
+</script>
+
+</body>
+</html>

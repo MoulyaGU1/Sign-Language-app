@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Picture Match Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(6, 100px);
+      grid-gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .card {
+      width: 100px;
+      height: 100px;
+      background: #4cafef;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .card img {
+      width: 80%;
+      height: 80%;
+      display: none;
+    }
+    .flipped img {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Match the Pictures!</h1>
+  <p>Find all matching pairs of alphabets and numbers.</p>
+
+  <div id="game-board"></div>
+
+  <script>
+    // Signs (A-Z + 0-9)
+    const signs = [
+      "A","B","C","D","E","F","G","H","I","J","K","L","M",
+      "N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+      "0","1","2","3","4","5","6","7","8","9"
+    ];
+
+    // Duplicate and shuffle
+    let gameImages = [...signs, ...signs].sort(() => Math.random() - 0.5);
+
+    const board = document.getElementById("game-board");
+    let flippedCards = [];
+    let matchedPairs = 0;
+
+    // Create card elements
+    gameImages.forEach(sign => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+
+      const img = document.createElement("img");
+      img.src = `/static/signs/${sign}.jpg`;
+      card.appendChild(img);
+
+      board.appendChild(card);
+
+      card.addEventListener("click", () => flipCard(card));
+    });
+
+    function flipCard(card) {
+      if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
+        card.classList.add("flipped");
+        flippedCards.push(card);
+
+        if (flippedCards.length === 2) {
+          setTimeout(checkMatch, 800);
+        }
+      }
+    }
+
+    function checkMatch() {
+      const [card1, card2] = flippedCards;
+      const img1 = card1.querySelector("img").src;
+      const img2 = card2.querySelector("img").src;
+
+      if (img1 === img2) {
+        matchedPairs++;
+      } else {
+        card1.classList.remove("flipped");
+        card2.classList.remove("flipped");
+      }
+
+      flippedCards = [];
+
+      if (matchedPairs === signs.length) {
+        setTimeout(() => alert("🎉 Congratulations! You matched all pairs!"), 300);
+      }
+    }
+  </script>
+</body>
+</html>

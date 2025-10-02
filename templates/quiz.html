@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quiz Game</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<style>
+body { font-family: 'Segoe UI', sans-serif; text-align:center; background:#f0f4f8; transition:0.3s;}
+body.dark-mode { background:#1a1a1a; color:#fff; }
+
+h2 { margin-top:20px; }
+#quizImage { width:200px; height:200px; margin:20px auto; border-radius:10px; }
+#funFact { margin-top:15px; font-size:18px; font-style:italic; }
+#scoreText { font-size:18px; margin-top:10px; }
+#themeToggleBtn { margin-top:20px; padding:10px 20px; border:none; border-radius:10px; cursor:pointer; font-weight:bold; }
+#guessInput { padding:8px; width:100px; font-size:16px; border-radius:5px; border:1px solid #ccc; }
+#submitBtn { padding:8px 16px; font-size:16px; border:none; border-radius:5px; background:#4CAF50; color:#fff; cursor:pointer; margin-left:10px; }
+#submitBtn:hover { background:#45a049; }
+</style>
+</head>
+<body>
+
+<h2>🎯 Quiz Game</h2>
+<img id="quizImage" src="">
+<div>
+    <input type="text" id="guessInput" placeholder="Type your guess">
+    <button id="submitBtn">Submit</button>
+</div>
+<p id="funFact"></p>
+<p id="scoreText">Score: 0</p>
+<button id="themeToggleBtn">Toggle Dark/Light Mode</button>
+
+<script>
+let signs = ["A","B","C","D","E","F","G","H","I","J","K","L","M",
+             "N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+             "0","1","2","3","4","5","6","7","8","9"];
+
+let facts = {};
+fetch("{{ url_for('static', filename='data/fun_facts.json') }}")
+.then(res => res.json())
+.then(data => facts = data);
+
+let currentSign, score = 0;
+
+function nextQuestion() {
+    currentSign = signs[Math.floor(Math.random() * signs.length)];
+    document.getElementById("quizImage").src = `/static/signs/${currentSign}.jpg`;
+    document.getElementById("guessInput").value = "";
+    document.getElementById("funFact").innerText = "";
+}
+
+document.getElementById("submitBtn").addEventListener("click", () => {
+    let guess = document.getElementById("guessInput").value.toUpperCase();
+    if(guess === currentSign){
+        score++;
+        alert("Correct!");
+    } else {
+        alert("Wrong! Correct: " + currentSign);
+    }
+    document.getElementById("scoreText").innerText = "Score: " + score;
+    document.getElementById("funFact").innerText = facts[currentSign] || "";
+    nextQuestion();
+});
+
+// Initialize first question
+nextQuestion();
+
+// Dark/Light toggle
+document.getElementById("themeToggleBtn").addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
+});
+if (localStorage.getItem("theme") === "dark") document.body.classList.add("dark-mode");
+
+</script>
+
+</body>
+</html>

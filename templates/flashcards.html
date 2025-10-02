@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flashcard Quiz</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+    background: #f0f4f8;
+    color: #000;
+    transition: background 0.3s, color 0.3s;
+}
+body.dark-mode { background: #1a1a1a; color: #fff; }
+#flashcard img {
+    width: 200px;
+    height: 200px;
+    margin: 20px auto;
+    display: block;
+}
+button.option {
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: #fff;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+button.option:hover { transform: translateY(-2px); }
+#feedback { margin-top: 10px; font-weight: bold; font-size: 18px; }
+#scoreText { margin-top: 10px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h2>🎴 Flashcard Quiz</h2>
+
+<div id="flashcard"></div>
+<div id="options"></div>
+<p id="feedback"></p>
+<p id="scoreText">Score: 0</p>
+<button id="shuffleBtn">Shuffle Signs</button>
+<button id="themeToggleBtn">🌙</button>
+
+<script>
+// Signs A-Z, 0-9
+let signs = ["A","B","C","D","E","F","G","H","I","J","K","L","M",
+             "N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+             "0","1","2","3","4","5","6","7","8","9"];
+
+let currentIndex = 0;
+let score = 0;
+
+// Shuffle function
+function shuffle(array) { array.sort(() => Math.random()-0.5); }
+
+// Speech function
+function speak(text){
+    if('speechSynthesis' in window){
+        let utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 0.8;
+        window.speechSynthesis.speak(utter);
+    }
+}
+
+// Show current flashcard
+function showCard(){
+    let sign = signs[currentIndex];
+    document.getElementById("flashcard").innerHTML = `<img src="/static/signs/${sign}.jpg">`;
+    document.getElementById("feedback").innerText = "";
+
+    // Generate 4 options
+    let options = [sign];
+    while(options.length < 4){
+        let randomSign = signs[Math.floor(Math.random()*signs.length)];
+        if(!options.includes(randomSign)) options.push(randomSign);
+    }
+    shuffle(options);
+
+    // Display options
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+    options.forEach(opt => {
+        let btn = document.createElement("button");
+        btn.className = "option";
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+    });
+}
+
+// Check user's answer
+function checkAnswer(selected){
+    let sign = signs[currentIndex];
+    const feedback = document.getElementById("feedback");
+    if(selected === sign){
+        feedback.innerText = "✅ Correct!";
+        score++;
+        speak(sign);
+    } else {
+        feedback.innerText = `❌ Wrong! Correct: ${sign}`;
+    }
+    document.getElementById("scoreText").innerText = "Score: " + score;
+    // Move to next after short delay
+    setTimeout(()=>{
+        currentIndex = (currentIndex + 1) % signs.length;
+        showCard();
+    }, 1500);
+}
+
+// Shuffle button
+document.getElementById("shuffleBtn").addEventListener("click", () => {
+    shuffle(signs);
+    currentIndex = 0;
+    score = 0;
+    showCard();
+});
+
+// Dark/Light toggle
+document.getElementById("themeToggleBtn").addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    localStorage.setItem("theme", document.body.classList.contains("dark-mode")?"dark":"light");
+});
+if(localStorage.getItem("theme")==="dark") document.body.classList.add("dark-mode");
+
+// Initialize
+shuffle(signs);
+showCard();
+</script>
+
+</body>
+</html>

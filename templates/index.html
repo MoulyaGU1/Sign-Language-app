@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Language Learning</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Sign Language Learning Hub</h1>
+    </header>
+
+    <main>
+        <section class="cards">
+            <a href="{{ url_for('alphabet') }}" class="card">Alphabet</a>
+            <a href="{{ url_for('numbers') }}" class="card">Numbers</a>
+            <a href="{{ url_for('quiz') }}" class="card">Quiz</a>
+            <a href="{{ url_for('match') }}" class="card">Match Game</a>
+            <a href="{{ url_for('snake') }}" class="card">Snake Game</a>
+            <a href="{{ url_for('camera_mode') }}" class="card">Camera Mode</a>
+            <a href="{{ url_for('flashcards') }}" class="card">Flashcards</a>
+            
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Sign Language Learning App</p>
+    </footer>
+
+</body>
+</html>

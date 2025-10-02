@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Upload Sign Image</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<h2>Upload an Image for AI Prediction</h2>
+
+<input type="file" id="imageInput" accept="image/*">
+<br><br>
+<button id="predictBtn">Predict</button>
+
+<p id="prediction">Prediction: -</p>
+<p id="confidence">Confidence: -</p>
+
+<script>
+const input = document.getElementById("imageInput");
+const btn = document.getElementById("predictBtn");
+const predictionText = document.getElementById("prediction");
+const confidenceText = document.getElementById("confidence");
+
+btn.addEventListener("click", () => {
+    const file = input.files[0];
+    if(!file){
+        alert("Please select an image first!");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fetch("/predict_upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.prediction){
+            predictionText.innerText = "Prediction: " + data.prediction;
+            confidenceText.innerText = "Confidence: " + data.confidence + "%";
+        } else {
+            predictionText.innerText = "Error: " + data.error;
+            confidenceText.innerText = "";
+        }
+    });
+});
+</script>
+</body>
+</html>

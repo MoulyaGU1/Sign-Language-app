@@ -1,0 +1,296 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+
+#menu button {
+    margin: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#display-area {
+    margin-top: 30px;
+}
+/* ============================
+   GENERAL STYLES
+============================ */
+
+/* Reset some defaults */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;   /* Light mode background */
+    color: #333;                 /* Light mode text */
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+}
+
+/* Headings */
+h1, h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Paragraphs */
+p {
+    margin: 10px 0;
+}
+
+/* ============================
+   BUTTON STYLES
+============================ */
+a.button, button {
+    display: inline-block;
+    padding: 12px 25px;
+    margin: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+a.button:hover, button:hover {
+    background-color: #45a049;
+}
+
+/* ============================
+   VIDEO AND CANVAS
+============================ */
+video {
+    border: 2px solid #333;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+canvas {
+    display: none;
+}
+
+/* ============================
+   PREDICTION TEXT
+============================ */
+#prediction, #confidence {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+/* ============================
+   DARK MODE
+============================ */
+body.dark-mode {
+    background-color: #121212;
+    color: #f0f0f0;
+}
+
+body.dark-mode h1, 
+body.dark-mode h2 {
+    color: #f0f0f0;
+}
+
+body.dark-mode a.button, 
+body.dark-mode button {
+    background-color: #333;
+    color: #f0f0f0;
+}
+
+body.dark-mode a.button:hover, 
+body.dark-mode button:hover {
+    background-color: #555;
+}
+
+body.dark-mode video {
+    border: 2px solid #f0f0f0;
+}
+
+/* ============================
+   SEARCH BAR (if used)
+============================ */
+input[type="text"].search {
+    padding: 10px;
+    width: 250px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin: 10px 0;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"].search:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* ============================
+   GRID LAYOUT (Alphabet / Numbers pages)
+============================ */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 15px;
+    justify-items: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.grid-item {
+    background-color: #4CAF50;
+    color: white;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    font-size: 24px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.grid-item:hover {
+    background-color: #45a049;
+}
+
+body.dark-mode .grid-item {
+    background-color: #333;
+}
+
+body.dark-mode .grid-item:hover {
+    background-color: #555;
+}
+
+/* ============================
+   QUIZ / MATCHING GAME
+============================ */
+.quiz-question, .match-item {
+    font-size: 20px;
+    margin: 15px 0;
+}
+
+.correct {
+    color: green;
+    font-weight: bold;
+}
+
+.wrong {
+    color: red;
+    font-weight: bold;
+}
+
+/* ============================
+   FOOTER (optional)
+============================ */
+footer {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #888;
+}
+#themeToggleBtn {
+    margin-top: 15px;
+    padding: 6px 12px;        /* smaller padding */
+    font-size: 14px;          /* smaller text */
+    border: none;
+    border-radius: 8px;       /* slightly rounded corners */
+    cursor: pointer;
+    font-weight: bold;
+    background: linear-gradient(to right, #ffc371, #ff5f6d);
+    color: #fff;
+    box-shadow: 1px 2px 6px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+}
+#themeToggleBtn:hover {
+    transform: translateY(-2px);
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: background 0.3s, color 0.3s;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #4CAF50;
+    color: white;
+}
+
+header h1 {
+    margin: 0;
+}
+
+#toggle-btn {
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 2rem;
+    gap: 1.5rem;
+}
+
+.card {
+    width: 150px;
+    height: 120px;
+    background: #4CAF50;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.1);
+    background: #45a049;
+}
+
+.light-mode {
+    background: #f5f5f5;
+    color: #000;
+}
+
+.dark-mode {
+    background: #121212;
+    color: #fff;
+}
+
+.dark-mode header {
+    background-color: #1E1E1E;
+}
+
+.dark-mode .card {
+    background-color: #333;
+}
+.dark-mode .card:hover {
+    background-color: #555;
+}
+
+
