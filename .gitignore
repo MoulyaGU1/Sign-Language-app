@@ -10,3 +10,8 @@ venv/
 .idea/
 .DS_Store
 Thumbs.db
+.venv
+venv
+__pycache__
+uploads_debug
+*.pyc
